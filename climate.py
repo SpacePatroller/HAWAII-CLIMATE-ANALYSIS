@@ -30,11 +30,13 @@ def home():
     print("Server received request for 'Home' page...")
     
     return(
-        f"Lets hope this information sticks!</br>"
-        f"Precip:-----------------/api/v1.0/precipitation</br>"
-        f"Station List:----------/api/v1.0/stations</br>"
-        f"12 Month Temps:---/api/v1.0/tobs</br>"
-        f"Min Max Avg From:--/api/v1.0/yyyy dd mm"
+        f"Most Advanced Technology ahead Climate App!</br>"
+        f"<a href=test></a>"
+        f"Precip:-------------------------------/api/v1.0/precipitation</br>"
+        f"Station List:------------------------/api/v1.0/stations</br>"
+        f"12 Month Temps:-----------------/api/v1.0/tobs</br>"
+        f"Min Max Avg:--------------------/api/v1.0/ yyyy dd mm</br>"
+        f"Min Max Avg(start,end):-------/api/v1.0/yyyy dd mm / yyyy dd mm"
     )
 
 # Convert the query results to a Dictionary using `date` as the key and `prcp` as the value.
@@ -86,17 +88,30 @@ def tobs():
 #   `/api/v1.0/<start>` and `/api/v1.0/<start>/<end>`
 
 #   * Return a JSON list of the minimum temperature, the average temperature, and the max temperature for a given start or start-end range.
-
-
-
 #   * When given the start and the end date, calculate the `TMIN`, `TAVG`, and `TMAX` for dates between the start and end date inclusive.
 
+@app.route("/api/v1.0/<start>/<end>")
+def start_date(start,end):
+
+    start = datetime.strptime(start, '%Y%m%d')
+    start_date = start.date()
+
+    end = datetime.strptime(end, '%Y%m%d')
+    end_date = end.date()
+    
+    min_max_avg_temp = session.query((Measurement.date),func.min(Measurement.tobs),func.max(Measurement.tobs),func.avg(Measurement.tobs)).\
+    filter(Measurement.date >= start_date).group_by(Measurement.date).\
+    filter(Measurement.date <= end_date).all()
+    
+    data = list(np.ravel(min_max_avg_temp))
+    
+    return jsonify(data)
 
 
 #   * When given the start only, calculate `TMIN`, `TAVG`, and `TMAX` for all dates greater than and equal to the start date.
 
 @app.route("/api/v1.0/<date>")
-def start_date(date):
+def start(date):
 
     date = datetime.strptime(date, '%Y%m%d')
     date_ = date.date()
