@@ -30,7 +30,7 @@ def home():
     print("Server received request for 'Home' page...")
     
     return(
-        f"Most Advanced Technology ahead Climate App!</br>"
+        f"Most Advanced Technologicaly ahead Climate App!</br>"
         f"<a href=test></a>"
         f"Precip:-------------------------------/api/v1.0/precipitation</br>"
         f"Station List:------------------------/api/v1.0/stations</br>"
